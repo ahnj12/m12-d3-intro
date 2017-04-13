@@ -26,8 +26,59 @@ var exam3 = [
 // You'll have to wait for you page to load to assign events to the elements created in your index.html file
 $(function() {
   // Select SVG
+    var svg = d3.select('#my-svg');
+
+    svg.attr('width', 300)
+        .attr('height', 400);
 
   // Reusable draw function
+    function draw(data)
+    {
+      var rects = svg.selectAll('rect').data(data, function (d)
+      {
+        return d.id;
+      });
+
+      rects.exit()
+          .transition()
+          .attr('width', 0)
+          .duration(250);
+
+      // rects.attr('y', function (d) { return 20 * d.id; })
+      //     .attr('height', 18)
+      //     .transition()
+      //     .attr('width', function (d) { return d.grade; })
+      //     .text(function (d) { return d.student; });
+
+      rects.enter()
+          .append('rect')
+          .attr('y', function (d) { return 40 * d.id; })
+          .attr('height', 35)
+          .merge(rects)
+          .transition()
+          .attr('width', function (d) { return d.grade * 2; });
+
+
+      var texts = svg.selectAll('text').data(data, function (d)
+      {
+        return d.id;
+      });
+
+      texts.enter()
+          .append('text')
+          .attr('y', function (d) { return 40 * d.id + 19; })
+          .attr('height', 35)
+          .style('fill', 'white')
+          .merge(texts)
+          .transition()
+          .text(function (d) { return d.student; });
+
+      texts.exit()
+          .transition()
+          .text('')
+          .duration(250);
+
+    }
 
     // Bind data to selection of rects in your svg
 
